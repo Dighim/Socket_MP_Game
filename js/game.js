@@ -80,7 +80,7 @@ $(document).ready(function () {
 function mainLoop(time) {
     var elapsedTime = (Date.now() - time) / 1000;
 
-    if (elapsedTime >= 14 / 1000) {
+    if (elapsedTime >= 100 / 1000) {
         time = Date.now();
         player.vx = 0;
         player.vy = 0;
