@@ -23,9 +23,10 @@ var canvas;
 var ctx;
 
 var socket = io.connect('51.38.234.106:8080');
+
 //var socket = io.connect('localhost:8080');
 
-function game(){
+function game() {
     pseudo = $('#pre_game input[type=text]').val();
     $('#pre_game').remove();
 
@@ -45,84 +46,86 @@ function game(){
             keyPressed.splice(idx, 1);
     });
 
-    socket.on('new_player', function(data){
-        if(otherPlayers){
+    socket.on('new_player', function (data) {
+        if (otherPlayers) {
             otherPlayers[data.id] = data.player;
         }
     });
 
-    socket.on('del_player', function(data){
-        if(otherPlayers){
+    socket.on('del_player', function (data) {
+        if (otherPlayers) {
             delete otherPlayers[data.id];
         }
     });
 
     socket.on('game_update', function (data) {
         var myPlayer = data.players[socket.id];
-        if (myPlayer !== undefined && player === undefined) {
-            player = {
-                name: myPlayer.name,
-                x: myPlayer.x,
-                y: myPlayer.y,
-                vx: 0,
-                vy: 0
-            };
-            requestAnimationFrame(function () {
-                mainLoop(Date.now());
-            });
-        } else if (data.players.length !== 0) {
-            var inputProcessed = data.inputs.filter(function (input) {
-                return input.id === socket.id;
-            });
-            inputs = inputs.slice(inputProcessed.length);
-            var self = myPlayer;
-            player.x = self.x;
-            player.y = self.y;
-            var added = {x: 0, y: 0};
-            for (var idx = 0; idx < inputs.length; idx++) {
-                var input = inputs[idx];
-                added.x += input.vx * SPEED * input.elapsedTime;
-                added.y += input.vy * SPEED * input.elapsedTime;
+        if (myPlayer !== undefined) {
+            if (player === undefined) {
+                player = {
+                    name: myPlayer.name,
+                    x: myPlayer.x,
+                    y: myPlayer.y,
+                    vx: 0,
+                    vy: 0
+                };
+                requestAnimationFrame(function () {
+                    mainLoop(Date.now());
+                });
+            } else if (data.players.length !== 0) {
+                var inputProcessed = data.inputs.filter(function (input) {
+                    return input.id === socket.id;
+                });
+                inputs = inputs.slice(inputProcessed.length);
+                var self = myPlayer;
+                player.x = self.x;
+                player.y = self.y;
+                var added = {x: 0, y: 0};
+                for (var idx = 0; idx < inputs.length; idx++) {
+                    var input = inputs[idx];
+                    added.x += input.vx * SPEED * input.elapsedTime;
+                    added.y += input.vy * SPEED * input.elapsedTime;
+                }
+                player.x += added.x;
+                player.y += added.y;
             }
-            player.x += added.x;
-            player.y += added.y;
-        }
 
-        if(!otherPlayers){
-            otherPlayers = data.players;
-            delete otherPlayers[socket.id];
-        }else {
-            for(var playerId in otherPlayers){
-                if(otherPlayers.hasOwnProperty(playerId)){
-                    var currentPlayer = data.players[playerId];
-                    if(currentPlayer) {
-                        otherPlayers[playerId].x = currentPlayer.oldX;
-                        otherPlayers[playerId].y = currentPlayer.oldY;
-                        var playerInputs = data.inputs.filter(function (input) {
-                            return input.id === playerId;
-                        });
-                        processInput(playerInputs);
+            if (!otherPlayers) {
+                otherPlayers = data.players;
+                delete otherPlayers[socket.id];
+            } else {
+                for (var playerId in otherPlayers) {
+                    if (otherPlayers.hasOwnProperty(playerId)) {
+                        var currentPlayer = data.players[playerId];
+                        if (currentPlayer) {
+                            otherPlayers[playerId].x = currentPlayer.oldX;
+                            otherPlayers[playerId].y = currentPlayer.oldY;
+                            var playerInputs = data.inputs.filter(function (input) {
+                                return input.id === playerId;
+                            });
+                            processInput(playerInputs);
+                        }
                     }
                 }
             }
         }
     });
 
-    socket.emit("add_player", {name:pseudo})
+    socket.emit("add_player", {name: pseudo})
 }
 
-function processInput(inputs){
-    if(inputs.length !== 0) {
+function processInput(inputs) {
+    if (inputs.length !== 0) {
         var currentPlayer = otherPlayers[inputs[0].id];
         var input = inputs[0];
         setTimeout(function () {
-            if(currentPlayer) {
+            if (currentPlayer) {
                 currentPlayer.x += input.vx * input.elapsedTime * SPEED;
                 currentPlayer.y += input.vy * input.elapsedTime * SPEED;
             }
             drawAll();
             processInput(inputs.slice(1));
-        }, input.elapsedTime*1000)
+        }, input.elapsedTime * 1000)
     }
 }
 
