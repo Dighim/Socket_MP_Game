@@ -91,16 +91,17 @@ socket.on('game_update', function (data) {
 });
 
 function processInput(inputs){
-    if(inputs.length !== 0) {
+    var time = 0;
+    for(var i = 0; i < inputs.length; i++){
         var currentPlayer = otherPlayers[inputs[0].id];
-        var input = inputs[0];
+        var input = inputs[i];
         setTimeout(function () {
             if(currentPlayer) {
                 currentPlayer.x += input.vx * input.elapsedTime * SPEED;
                 currentPlayer.y += input.vy * input.elapsedTime * SPEED;
             }
-            processInput(inputs.slice(1));
-        }, input.elapsedTime*1000)
+        }, (time + input.elapsedTime)*1000);
+        time += input.elapsedTime;
     }
 }
 
