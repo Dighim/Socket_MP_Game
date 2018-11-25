@@ -65,29 +65,31 @@ io.sockets.on('connection', function (socket) {
         y: Math.round(Math.random() * (WORLD.height - SQUARESIZE))
     };
 
-    socket.emit("new_player", {id:socket.id, player:players[socket.id]});
-
-    setInterval(function () {
-        simulateWorld();
-    }, 300);
+    socket.emit("new_player", {id: socket.id, player: players[socket.id]});
 });
 
 function simulateWorld() {
-    for(var playerId in players){
-        if(players.hasOwnProperty(playerId)){
-            players[playerId].oldX = players[playerId].x;
-            players[playerId].oldY = players[playerId].y;
+    if (players) {
+        for (var playerId in players) {
+            if (players.hasOwnProperty(playerId)) {
+                players[playerId].oldX = players[playerId].x;
+                players[playerId].oldY = players[playerId].y;
+            }
         }
+        for (var idx = 0; idx < inputs.length; idx++) {
+            var input = inputs[idx];
+            var player = players[input.id];
+            player.x += input.vx * SPEED * input.elapsedTime;
+            player.y += input.vy * SPEED * input.elapsedTime;
+        }
+        io.sockets.emit("game_update", {timestamp: Date.now(), players: players, inputs: inputs});
+        inputs = [];
     }
-    for(var idx = 0; idx < inputs.length; idx++){
-        var input = inputs[idx];
-        var player = players[input.id];
-        player.x += input.vx * SPEED * input.elapsedTime;
-        player.y += input.vy * SPEED * input.elapsedTime;
-    }
-    io.sockets.emit("game_update", {timestamp: Date.now(), players: players, inputs: inputs});
-    inputs = [];
 }
+
+setInterval(function () {
+    simulateWorld();
+}, 300);
 
 server.listen(8080, "0.0.0.0");
 
