@@ -71,6 +71,9 @@ socket.on('game_update', function (data) {
                 var playerInputs = data.inputs.filter(function(input){
                     return input.id === playerId;
                 });
+                if(playerInputs.length !== 0){
+                    console.log("INPUTS FROM OTHER PLAYER");
+                }
                 processInput(playerInputs);
             }
         }
