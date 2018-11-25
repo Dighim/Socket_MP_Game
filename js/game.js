@@ -94,8 +94,10 @@ function processInput(inputs){
         var currentPlayer = otherPlayers[inputs[0].id];
         var input = inputs[0];
         setTimeout(function () {
-            currentPlayer.x += input.vx * input.elapsedTime * SPEED;
-            currentPlayer.y += input.vy * input.elapsedTime * SPEED;
+            if(currentPlayer) {
+                currentPlayer.x += input.vx * input.elapsedTime * SPEED;
+                currentPlayer.y += input.vy * input.elapsedTime * SPEED;
+            }
             processInput(inputs.slice(1));
         }, input.elapsedTime*1000)
     }
