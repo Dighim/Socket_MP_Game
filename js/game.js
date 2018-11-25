@@ -82,8 +82,6 @@ socket.on('game_update', function (data) {
                         return input.id === playerId;
                     });
                     processInput(playerInputs);
-                }else {
-                    delete otherPlayers[playerId];
                 }
             }
         }
@@ -91,17 +89,16 @@ socket.on('game_update', function (data) {
 });
 
 function processInput(inputs){
-    var time = 0;
-    for(var i = 0; i < inputs.length; i++){
-        var currentPlayer = otherPlayers[inputs[i].id];
-        var input = inputs[i];
+    if(inputs.length !== 0) {
+        var currentPlayer = otherPlayers[inputs[0].id];
+        var input = inputs[0];
         setTimeout(function () {
             if(currentPlayer) {
                 currentPlayer.x += input.vx * input.elapsedTime * SPEED;
                 currentPlayer.y += input.vy * input.elapsedTime * SPEED;
             }
-        }, (time + input.elapsedTime)*1000);
-        time += input.elapsedTime;
+            processInput(inputs.slice(1));
+        }, input.elapsedTime*1000)
     }
 }
 
