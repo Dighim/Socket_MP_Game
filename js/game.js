@@ -57,11 +57,6 @@ socket.on('game_update', function (data) {
 
 });
 
-function executeInput(playerId, playerInput) {
-    otherPlayers[playerId].x += playerInput.vx * SPEED * playerInput.elapsedTime;
-    otherPlayers[playerId].y += playerInput.vy * SPEED * playerInput.elapsedTime;
-}
-
 $(document).ready(function () {
         canvas = $('canvas')[0];
 

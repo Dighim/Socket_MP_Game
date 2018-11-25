@@ -67,7 +67,7 @@ io.sockets.on('connection', function (socket) {
 
     setInterval(function () {
         simulateWorld();
-    }, 50);
+    }, 300);
 });
 
 function simulateWorld() {
@@ -82,7 +82,7 @@ function simulateWorld() {
         var player = players[input.id];
         player.x += input.vx * SPEED * input.elapsedTime;
         player.y += input.vy * SPEED * input.elapsedTime;
-    };
+    }
     io.sockets.emit("game_update", {timestamp: Date.now(), players: players, inputs: inputs});
     inputs = [];
 }
