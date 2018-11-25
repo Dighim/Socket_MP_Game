@@ -5,7 +5,7 @@ var DIRECTIONS = [{code: 'S'.charCodeAt(0), dir: {x: 0, y: 1}}, {
 
 var player;
 
-var otherPlayers = {};
+var otherPlayers;
 
 var SQUARESIZE = 50;
 
