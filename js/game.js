@@ -33,7 +33,9 @@ function game() {
     canvas = $('<canvas width="500px" height="500px">');
     $('body').append(canvas);
 
-    ctx = canvas[0].getContext('2d');
+    canvas = canvas[0];
+
+    ctx = canvas.getContext('2d');
 
     $(document).on('keydown', function (ev) {
         if (!keyPressed.includes(ev.which))
