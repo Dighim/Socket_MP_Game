@@ -17,9 +17,12 @@ var inputs = [];
 
 var inputId = 1;
 
+var canDraw = true;
+
 var canvas;
 var ctx;
 
+//var socket = io.connect('51.38.234.106:8080');
 var socket = io.connect('localhost:8080');
 socket.on('game_update', function (data) {
     if (inputs.length > 500) {
@@ -44,13 +47,14 @@ socket.on('game_update', function (data) {
         var self = myPlayer;
         player.x = self.x;
         player.y = self.y;
-        var xAdded = 0;
+
+        canDraw = false;
         for(var idx = 0; idx < inputs.length; idx++){
             var input = inputs[idx];
             player.x += input.vx * input.elapsedTime;
-            xAdded += input.vx * input.elapsedTime;
             player.y += input.vy * input.elapsedTime;
         }
+        canDraw = true;
     }
 
     if (otherPlayers === undefined) {
@@ -80,7 +84,7 @@ $(document).ready(function () {
 function mainLoop(time) {
     var elapsedTime = (Date.now() - time) / 1000;
 
-    if (elapsedTime >= 100 / 1000) {
+    if (elapsedTime >= 7 / 1000) {
         time = Date.now();
         player.vx = 0;
         player.vy = 0;
@@ -101,7 +105,8 @@ function mainLoop(time) {
             socket.emit('player_update', input);
         }
     }
-    drawAll();
+    if(canDraw)
+        drawAll();
 
     requestAnimationFrame(function () {
         mainLoop(time);
