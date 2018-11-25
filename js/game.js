@@ -97,7 +97,7 @@ function processInput(inputs){
             currentPlayer.x += input.vx * input.elapsedTime * SPEED;
             currentPlayer.y += input.vy * input.elapsedTime * SPEED;
             processInput(inputs.slice(1));
-        }, input.elapsedTime)
+        }, input.elapsedTime*1000)
     }
 }
 
