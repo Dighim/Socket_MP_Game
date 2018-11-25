@@ -56,7 +56,6 @@ socket.on('game_update', function (data) {
         otherPlayers = data.players;
         otherPlayers[socket.id] = undefined;
     }
-    drawAll()
 });
 
 $(document).ready(function () {
@@ -101,6 +100,7 @@ function mainLoop(time) {
             socket.emit('player_update', input);
         }
     }
+    drawAll()
 
     requestAnimationFrame(function () {
         mainLoop(time);
