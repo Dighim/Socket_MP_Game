@@ -78,14 +78,13 @@ socket.on('game_update', function (data) {
                 if(currentPlayer) {
                     otherPlayers[playerId].x = currentPlayer.oldX;
                     otherPlayers[playerId].y = currentPlayer.oldY;
+                    var playerInputs = data.inputs.filter(function (input) {
+                        return input.id === playerId;
+                    });
+                    processInput(playerInputs);
+                }else {
+                    delete otherPlayers[playerId];
                 }
-                var playerInputs = data.inputs.filter(function(input){
-                    return input.id === playerId;
-                });
-                if(playerInputs.length !== 0){
-                    console.log("INPUTS FROM OTHER PLAYER");
-                }
-                processInput(playerInputs);
             }
         }
     }
