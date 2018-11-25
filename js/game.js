@@ -23,9 +23,6 @@ var ctx;
 //var socket = io.connect('51.38.234.106:8080');
 var socket = io.connect('localhost:8080');
 socket.on('game_update', function (data) {
-    if (inputs.length > 500) {
-        console.log(inputs);
-    }
     var myPlayer = data.players[socket.id];
     if (myPlayer !== undefined && player === undefined) {
         player = {
@@ -45,12 +42,14 @@ socket.on('game_update', function (data) {
         var self = myPlayer;
         player.x = self.x;
         player.y = self.y;
-
+        var added = {x:0, y:0};
         for(var idx = 0; idx < inputs.length; idx++){
             var input = inputs[idx];
-            player.x += input.vx * input.elapsedTime;
-            player.y += input.vy * input.elapsedTime;
+            added.x += input.vx * SPEED * input.elapsedTime;
+            added.y += input.vy * SPEED * input.elapsedTime;
         }
+        player.x += added.x;
+        player.y += added.y;
     }
 
     if (otherPlayers === undefined) {
