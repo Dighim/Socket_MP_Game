@@ -32,6 +32,12 @@ socket.on('new_player', function(data){
     }
 });
 
+socket.on('del_player', function(data){
+    if(otherPlayers){
+        delete otherPlayers[data.id];
+    }
+});
+
 socket.on('game_update', function (data) {
     var myPlayer = data.players[socket.id];
     if (myPlayer !== undefined && player === undefined) {

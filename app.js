@@ -52,6 +52,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         delete players[socket.id];
+        io.sockets.emit("del_player", {id:socket.id});
         console.log('Un client s\'est déconnecté !');
     });
 
