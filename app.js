@@ -61,12 +61,14 @@ io.sockets.on('connection', function (socket) {
         inputs.push(input);
     });
 
-    players[socket.id] = {
-        x: Math.round(Math.random() * (WORLD.width - SQUARESIZE)),
-        y: Math.round(Math.random() * (WORLD.height - SQUARESIZE))
-    };
-
-    io.sockets.emit("new_player", {id: socket.id, player: players[socket.id]});
+    socket.on("add_player", function(data){
+        players[socket.id] = {
+            name: data.name,
+            x: Math.round(Math.random() * (WORLD.width - SQUARESIZE)),
+            y: Math.round(Math.random() * (WORLD.height - SQUARESIZE))
+        };
+        io.sockets.emit("new_player", {id: socket.id, player: players[socket.id]});
+    });
 });
 
 function simulateWorld() {
