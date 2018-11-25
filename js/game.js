@@ -30,7 +30,7 @@ function game() {
     pseudo = $('#pre_game input[type=text]').val();
     $('#pre_game').remove();
 
-    var canvas = $('<canvas width="500px" height="500px">');
+    canvas = $('<canvas width="500px" height="500px">');
     $('body').append(canvas);
 
     ctx = canvas[0].getContext('2d');
