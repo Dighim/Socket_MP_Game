@@ -28,7 +28,7 @@ var socket = io.connect('51.38.234.106:8080');
 
 socket.on('new_player', function(data){
     if(otherPlayers){
-        otherPlayers[data.id] = data.players;
+        otherPlayers[data.id] = data.player;
     }
 });
 
