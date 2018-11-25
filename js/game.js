@@ -20,8 +20,8 @@ var inputId = 1;
 var canvas;
 var ctx;
 
-//var socket = io.connect('51.38.234.106:8080');
-var socket = io.connect('localhost:8080');
+var socket = io.connect('51.38.234.106:8080');
+//var socket = io.connect('localhost:8080');
 socket.on('game_update', function (data) {
     var myPlayer = data.players[socket.id];
     if (myPlayer !== undefined && player === undefined) {
@@ -42,8 +42,8 @@ socket.on('game_update', function (data) {
         var self = myPlayer;
         player.x = self.x;
         player.y = self.y;
-        var added = {x:0, y:0};
-        for(var idx = 0; idx < inputs.length; idx++){
+        var added = {x: 0, y: 0};
+        for (var idx = 0; idx < inputs.length; idx++) {
             var input = inputs[idx];
             added.x += input.vx * SPEED * input.elapsedTime;
             added.y += input.vy * SPEED * input.elapsedTime;
@@ -52,10 +52,8 @@ socket.on('game_update', function (data) {
         player.y += added.y;
     }
 
-    if (otherPlayers === undefined) {
-        otherPlayers = data.players;
-        delete otherPlayers[socket.id];
-    }
+    otherPlayers = data.players;
+    delete otherPlayers[socket.id];
 });
 
 $(document).ready(function () {
@@ -83,13 +81,14 @@ function mainLoop(time) {
         time = Date.now();
         player.vx = 0;
         player.vy = 0;
-        for(var idx = 0; idx < DIRECTIONS.length; idx++){
+        for (var idx = 0; idx < DIRECTIONS.length; idx++) {
             var direction = DIRECTIONS[idx];
             if (keyPressed.includes(direction.code)) {
                 player.vx += direction.dir.x;
                 player.vy += direction.dir.y;
             }
-        };
+        }
+        ;
 
         if (player.vx !== 0 || player.vy !== 0) {
             player.x += player.vx * SPEED * elapsedTime;
