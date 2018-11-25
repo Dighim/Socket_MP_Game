@@ -67,7 +67,7 @@ io.sockets.on('connection', function (socket) {
 
     setInterval(function () {
         simulateWorld();
-    }, 300);
+    }, 50);
 });
 
 function simulateWorld() {
