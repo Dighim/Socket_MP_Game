@@ -93,7 +93,7 @@ socket.on('game_update', function (data) {
 function processInput(inputs){
     var time = 0;
     for(var i = 0; i < inputs.length; i++){
-        var currentPlayer = otherPlayers[inputs[0].id];
+        var currentPlayer = otherPlayers[inputs[i].id];
         var input = inputs[i];
         setTimeout(function () {
             if(currentPlayer) {
