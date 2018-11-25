@@ -75,8 +75,10 @@ socket.on('game_update', function (data) {
         for(var playerId in otherPlayers){
             if(otherPlayers.hasOwnProperty(playerId)){
                 var currentPlayer = data.players[playerId];
-                otherPlayers[playerId].x = currentPlayer.oldX;
-                otherPlayers[playerId].y = currentPlayer.oldY;
+                if(otherPlayers[playerId]) {
+                    otherPlayers[playerId].x = currentPlayer.oldX;
+                    otherPlayers[playerId].y = currentPlayer.oldY;
+                }
                 var playerInputs = data.inputs.filter(function(input){
                     return input.id === playerId;
                 });
