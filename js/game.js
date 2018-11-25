@@ -25,6 +25,7 @@ var ctx;
 //var socket = io.connect('51.38.234.106:8080');
 var socket = io.connect('localhost:8080');
 socket.on('game_update', function (data) {
+    canDraw = false;
     if (inputs.length > 500) {
         console.log(inputs);
     }
@@ -48,19 +49,18 @@ socket.on('game_update', function (data) {
         player.x = self.x;
         player.y = self.y;
 
-        canDraw = false;
         for(var idx = 0; idx < inputs.length; idx++){
             var input = inputs[idx];
             player.x += input.vx * input.elapsedTime;
             player.y += input.vy * input.elapsedTime;
         }
-        canDraw = true;
     }
 
     if (otherPlayers === undefined) {
         otherPlayers = data.players;
         otherPlayers[socket.id] = undefined;
     }
+    canDraw = true;
 });
 
 $(document).ready(function () {
