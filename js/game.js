@@ -18,11 +18,20 @@ var otherInputs = [];
 
 var inputId = 1;
 
+var TIMEBEFOREUPDATE = 0.3;
+
 var canvas;
 var ctx;
 
 var socket = io.connect('51.38.234.106:8080');
 //var socket = io.connect('localhost:8080');
+
+socket.on('new_player', function(data){
+    if(otherPlayers){
+        otherPlayers[data.id] = data.players;
+    }
+});
+
 socket.on('game_update', function (data) {
     var myPlayer = data.players[socket.id];
     if (myPlayer !== undefined && player === undefined) {
@@ -52,10 +61,33 @@ socket.on('game_update', function (data) {
         player.x += added.x;
         player.y += added.y;
     }
-    otherPlayers = data.players;
-    delete otherPlayers[socket.id];
 
+    if(!otherPlayers){
+        otherPlayers = data.players;
+        delete otherPlayers[socket.id];
+    }else {
+        for(var playerId in otherPlayers){
+            if(otherPlayers.hasOwnProperty(playerId)){
+                var playerInputs = data.inputs.filter(function(input){
+                    return input.id === playerId;
+                });
+                processInput(playerInputs);
+            }
+        }
+    }
 });
+
+function processInput(inputs){
+    if(inputs.length !== 0) {
+        var currentPlayer = otherPlayers[inputs[0].id];
+        var input = inputs[0];
+        setTimeout(function () {
+            currentPlayer.x += input.vx * input.elapsedTime * SPEED;
+            currentPlayer.y += input.vy * input.elapsedTime * SPEED;
+            processInput(inputs.slice(1));
+        }, input.elapsedTime)
+    }
+}
 
 $(document).ready(function () {
         canvas = $('canvas')[0];
@@ -99,7 +131,7 @@ function mainLoop(time) {
             socket.emit('player_update', input);
         }
     }
-    drawAll()
+    drawAll();
 
     requestAnimationFrame(function () {
         mainLoop(time);

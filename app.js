@@ -65,6 +65,8 @@ io.sockets.on('connection', function (socket) {
         y: Math.round(Math.random() * (WORLD.height - SQUARESIZE))
     };
 
+    socket.emit("new_player", {id:socket.id, player:players[socket.id]});
+
     setInterval(function () {
         simulateWorld();
     }, 300);
