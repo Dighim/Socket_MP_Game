@@ -90,7 +90,7 @@ function simulateWorld() {
 
 setInterval(function () {
     simulateWorld();
-}, 300);
+}, 150);
 
 server.listen(8080, "0.0.0.0");
 
