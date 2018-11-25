@@ -54,7 +54,7 @@ socket.on('game_update', function (data) {
 
     if (otherPlayers === undefined) {
         otherPlayers = data.players;
-        otherPlayers[socket.id] = undefined;
+        delete otherPlayers[socket.id];
     }
 });
 
