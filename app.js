@@ -71,6 +71,12 @@ io.sockets.on('connection', function (socket) {
 });
 
 function simulateWorld() {
+    for(var playerId in players){
+        if(players.hasOwnProperty(playerId)){
+            players[playerId].oldX = players[playerId].x;
+            players[playerId].oldY = players[playerId].y;
+        }
+    }
     for(var idx = 0; idx < inputs.length; idx++){
         var input = inputs[idx];
         var player = players[input.id];

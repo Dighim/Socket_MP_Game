@@ -14,6 +14,7 @@ var SPEED = 150;
 var keyPressed = [];
 
 var inputs = [];
+var otherInputs = [];
 
 var inputId = 1;
 
@@ -51,10 +52,30 @@ socket.on('game_update', function (data) {
         player.x += added.x;
         player.y += added.y;
     }
-
-    otherPlayers = data.players;
-    delete otherPlayers[socket.id];
+    if (otherPlayers === undefined) {
+        otherPlayers = data.players;
+        delete otherPlayers[socket.id];
+    } else {
+        for (var playerId in otherPlayers) {
+            if (otherPlayers.hasOwnProperty(playerId)) {
+                var playerInputs = data.inputs.filter(function (input) {
+                    return input.id === playerId;
+                });
+                var time = 0;
+                for (var idx = 0; idx < playerInputs.length; idx++) {
+                    var playerInput = playerInputs[idx];
+                    setTimeout(executeInput.bind(null, playerId, playerInput),(time + playerInput.elapsedTime) * 1000);
+                    time += playerInput.elapsedTime;
+                }
+            }
+        }
+    }
 });
+
+function executeInput(playerId, playerInput){
+    otherPlayers[playerId].x += playerInput.vx * SPEED * playerInput.elapsedTime;
+    otherPlayers[playerId].y += playerInput.vy * SPEED * playerInput.elapsedTime;
+}
 
 $(document).ready(function () {
         canvas = $('canvas')[0];
@@ -88,7 +109,6 @@ function mainLoop(time) {
                 player.vy += direction.dir.y;
             }
         }
-        ;
 
         if (player.vx !== 0 || player.vy !== 0) {
             player.x += player.vx * SPEED * elapsedTime;
