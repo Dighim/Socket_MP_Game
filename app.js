@@ -41,8 +41,8 @@ var inputs = [];
 
 var SPEED = 150;
 var WORLD = {
-    width: 400,
-    height: 400
+    width: 500,
+    height: 500
 };
 var SQUARESIZE = 50;
 
@@ -66,7 +66,7 @@ io.sockets.on('connection', function (socket) {
     };
 
     setInterval(function () {
-        simulateWorld(Date.now());
+        simulateWorld();
     }, 300);
 });
 
